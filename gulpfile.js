@@ -13,42 +13,19 @@ const gulp = require('gulp'),
 	wait = require('gulp-wait'),
 	imagemin = require('gulp-imagemin'),
 	sourcemaps = require('gulp-sourcemaps'),
-	notifier = require('node-notifier'),
-	eslint = require('gulp-eslint');
+	notifier = require('node-notifier');
 
 let file;
 
-gulp.task('default', ['watch', 'scripts', 'styles', 'styles-web', 'styles-dark', 'lint-all']);
+gulp.task('default', ['watch', 'scripts', 'styles', 'styles-web']);
 
 gulp.task('watch', () => {
 	process.env.NODE_ENV = 'development';
 	livereload.listen();
-	gulp.watch('./src/scss/*.scss', ['styles', 'styles-web', 'styles-dark']);
-	gulp.watch(['./src/frontend-scripts/**/*.js*', './routes/**/*.js', './__test__/*.js'], e => {
-		file = process.platform === 'win32' ? `./${e.path.split('E:\\apps\\one-night-werewolf\\')[1].split('\\').join('/')}` : `./${e.path.split('/Users/Coz/one-night-werewolf/')[1]}`;
-		gulp.start('lint');
-	});
+	gulp.watch('./src/scss/*.scss', ['styles', 'styles-web']);
 	gulp.watch(['./src/frontend-scripts/**/*.js*'], ['scripts']);
 	gulp.watch('./routes/*.js', ['reload']);
 	gulp.watch('./src/images/*', ['imagemin']);
-});
-
-gulp.task('lint', () => {
-	return gulp.src(file)
-		.pipe(eslint())
-		.pipe(plumber())
-		.pipe(eslint.format())
-		.pipe(eslint.failAfterError())
-		.on('error', () => {
-			notifier.notify({title: 'ESLint Error', message: ' '});
-		});
-});
-
-gulp.task('lint-all', () => {
-	return gulp.src(['./routes/**/*.js', './src/frontend-scripts/**/*.jsx', './__test__/*.test.js'])
-		.pipe(eslint())
-		.pipe(eslint.format())
-		.pipe(eslint.failAfterError());
 });
 
 gulp.task('imagemin', () => {
@@ -59,19 +36,6 @@ gulp.task('imagemin', () => {
 
 gulp.task('styles', () => {
 	return gulp.src('./src/scss/style.scss')
-		.pipe(plumber())
-		.pipe(sourcemaps.init())
-		.pipe(sass({outputStyle: 'compressed'}).on('error', () => {
-			notifier.notify({title: 'SASS Error', message: ' '});
-		}))
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./public/styles/'))
-		.pipe(wait(1000))
-		.pipe(livereload());
-});
-
-gulp.task('styles-dark', () => {
-	return gulp.src('./src/scss/style-dark.scss')
 		.pipe(plumber())
 		.pipe(sourcemaps.init())
 		.pipe(sass({outputStyle: 'compressed'}).on('error', () => {
@@ -126,7 +90,7 @@ gulp.task('reload', () => {
 		.pipe(livereload());
 });
 
-gulp.task('build', ['build-css', 'build-css-dark', 'build-js']);
+gulp.task('build', ['build-css', 'build-js']);
 
 gulp.task('build-js', () => {
 	process.env.NODE_ENV = 'production';
@@ -154,16 +118,6 @@ gulp.task('build-js', () => {
 
 gulp.task('build-css', () => {
 	return gulp.src('./src/scss/style.scss')
-		.pipe(plumber())
-		.pipe(sass({outputStyle: 'compressed'}).on('error', () => {
-			notifier.notify({title: 'SASS Error', message: ' '});
-		}))
-		.pipe(cleanCSS({keepSpecialComments: 0}))
-		.pipe(gulp.dest('./public/styles/'));
-});
-
-gulp.task('build-css-dark', () => {
-	return gulp.src('./src/scss/style-dark.scss')
 		.pipe(plumber())
 		.pipe(sass({outputStyle: 'compressed'}).on('error', () => {
 			notifier.notify({title: 'SASS Error', message: ' '});

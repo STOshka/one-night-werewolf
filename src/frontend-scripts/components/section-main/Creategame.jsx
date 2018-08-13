@@ -42,7 +42,7 @@ export default class Creategame extends React.Component {
 		});
 
 		$(this.progressbar).progress({
-			percent: 20,
+			value: 2,
 			total: 10,
 			label: 'ratio',
 			text: {
@@ -52,7 +52,7 @@ export default class Creategame extends React.Component {
 	}
 
 	handleChangeRole(e) {
-		let werewolfTeamCount = this.state.roles.filter(el => el === 'werewolf' || el === 'minion'.length),
+		let werewolfTeamCount = this.state.roles.filter(el => el === 'werewolf' || el === 'minion').length,
 			tannerTeamCount = this.state.roles.filter(el => el === 'tanner').length;
 
 		const $target = $(e.target),
@@ -102,7 +102,7 @@ export default class Creategame extends React.Component {
 
 	selectDefaultRoles() {
 		this.setState(
-			{roles: defaultRolesArray}
+			{roles: Object.assign([],defaultRolesArray)}
 		);
 
 		$(this.progressbar).progress({
