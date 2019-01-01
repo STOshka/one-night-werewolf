@@ -25,29 +25,15 @@ Install mongodb, have it in your path.
 
 > mkdir data logs
 
-> npm i -g gulp nodemon
+> npm i -g gulp
 
 > npm i
-
-At this point you may receive an error regarding node-sass so you'll need to do
-
-> npm rebuild node-sass
-
-For installation on windows, you may need to do a few extra steps if you are getting node-gyp errors, specifically installing the required MS programs referred to on node-gyp's github, and then possibly doing:
-
-> set GYP_MSVS_VERSION=2013
-
-> npm i --msvs_version=2013
-
-instead of the npm install found above.
-
-On occasion semantic-ui itself will attempt to install for some reason - you can safely control-c at the prompt.
 
 ## Running in dev mode ##
 
 start mongo:
 
-> npm run db
+> mongod
 
 start server:
 
